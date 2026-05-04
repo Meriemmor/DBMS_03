@@ -544,7 +544,7 @@ Müller, Anna|An Introduction to Database Systems
 SQL:
 
 ```sql
-SELECT m.full_name,
+SELECT m.name,
        COUNT(l.loan_id) AS active_loans
 FROM   member AS m
 LEFT OUTER JOIN loan AS l
