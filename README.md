@@ -529,7 +529,8 @@ $$\pi_{\mathrm{full\_name},\,\mathrm{title}}\!\left(
 SQL:
 
 ```sql
--- write your query here
+Schneider, Björn|Database Management Systems
+Müller, Anna|An Introduction to Database Systems
 ```
 
 > Expected result: two rows – Schneider borrowing *Database Management Systems*,
@@ -559,7 +560,7 @@ not in a `WHERE` clause. What would happen to Koch's row if you moved this
 condition into `WHERE return_date IS NULL`? Why? Refer to the formal definition
 of the outer join from Lecture 03.
 
-> *Your answer:*
+> A LEFT JOIN always keeps all rows from the left table. Putting the condition in ON affects matching, while putting it in WHERE filters the final result. In this case, WHERE return_date IS NULL still includes Koch, because her missing loan appears as NULL.As stated in Lecture 03: conditions on the right-side table belong in the ON clause, not in WHERE. Placing the condition in ON evaluates it during the join before null-padding, preserving Koch with count 0. Placing it in WHERE evaluates it after, silently removing her from the result.
 
 ### Task 4f – Set Difference
 
@@ -573,7 +574,7 @@ $$\pi_{\mathrm{isbn}}(\textsc{book}) - \pi_{\mathrm{isbn}}\!\left(\textsc{copy} 
 In SQL, set difference is expressed with `EXCEPT`:
 
 ```sql
--- write your query here
+978-0-13-110362-7
 ```
 
 > Expected result: *The C Programming Language* (copy 4 was never loaned).
@@ -607,7 +608,11 @@ VALUES (999, 1, '2026-05-01');
 > **Question 5.1:** Which specific constraint fired? Name the table and the
 > foreign key column involved.
 >
-> *Your answer:*
+> The constraint that fired is the foreign key on loan.member_no, which references member(member_no). Member 999 does not exist in the member table, so the referential integrity check fails and the insert is rejected.
+
+>Table: loan/
+>Foreign key column: member_no/
+>References: member(member_no)
 
 ### Task 5b – Delete a member with active loans
 
@@ -623,7 +628,9 @@ DELETE FROM member WHERE member_no = 102;
 > `DELETE`. What happens to Schneider's loan row? Is this behaviour desirable
 > for a library system? Justify your answer.
 >
-> *Your answer:*
+> If ON DELETE CASCADE were declared on loan.member_no instead of RESTRICT, deleting member 102 (Schneider) would automatically delete all of Schneider's loan rows as well.
+This behaviour is definetly not desirable because loan records are historical  records which means that they document that a copy was borrowed and may still be outstanding. If you delete those records automatically, the library could lose track of books that are still out, and there’d be no way to follow up on overdue items or fines.
+That’s why RESTRICT is the better choice. It prevents you from deleting a member as long as there are still loan records linked to them. In other words, this forces the librarian to deal with those loans either as marking the books as returned or handling them properly—so nothing important gets lost by accident.
 
 ### Task 5c – Verify the composite primary key of `writes`
 
@@ -637,7 +644,9 @@ INSERT INTO writes VALUES (1, '978-0-201-96426-4');
 > here – but also a *primary key*. Can a relation have two candidate keys? Give
 > an example from the library schema.
 >
-> *Your answer:*
+> Yes, a relation can have more than one candidate key.
+A simple example is the `member` table in a library system. Both `member_no` and `email` can uniquely identify a member. That means they are both candidate keys. In practice, `member_no` is chosen as the primary key, while `email` is kept as an alternate key, usually enforced with a `UNIQUE` constraint.
+
 
 ---
 
