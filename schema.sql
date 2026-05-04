@@ -1,8 +1,8 @@
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE book (
-    isbn        TEXT PRIMARY KEY,
-    title       TEXT NOT NULL,
+    isbn        TEXT    PRIMARY KEY,
+    title       TEXT    NOT NULL,
     pub_year    INTEGER
 );
 
@@ -30,7 +30,8 @@ CREATE TABLE copy (
 CREATE TABLE member (
     member_no   INTEGER PRIMARY KEY,
     name        TEXT    NOT NULL,
-    email       TEXT
+    email       TEXT,
+    join_date   TEXT
 );
 
 CREATE TABLE loan (
@@ -38,10 +39,8 @@ CREATE TABLE loan (
     member_no   INTEGER NOT NULL,
     copy_no     INTEGER NOT NULL,
     loan_date   TEXT    NOT NULL,
-    due_date    TEXT    NOT NULL,
+    due_date    TEXT,
     return_date TEXT,
     FOREIGN KEY (member_no) REFERENCES member(member_no) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (copy_no)   REFERENCES copy(copy_no)     ON DELETE RESTRICT ON UPDATE CASCADE
-);sqlite3 library.db < schema.sql
-sqlite3 library.db ".tables"
-
+);
