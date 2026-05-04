@@ -751,7 +751,8 @@ If you have not used `scp` before, work through this exercise first:
 > **Screenshot 3:** Take a screenshot of `schema.svg` showing all six entities
 > and all five relationships, and insert it here.
 >
-> `[insert screenshot]`
+> <img width="825" height="513" alt="image" src="https://github.com/user-attachments/assets/43595144-8651-4a1a-beb7-82eea91b376c" />
+
 
 Add `schema.svg` to `.gitignore` (it is generated, not authored):
 
@@ -795,7 +796,8 @@ joins. SQL does not prescribe an execution order; the query optimizer may
 reorder these joins freely. Under what condition would reordering a join change
 the *result* of a query? Under what condition is it always safe?
 
-> *Your answer:*
+> Reordering is always safe when all joins are inner joins (equi-joins), because they are commutative and associative. Reordering can change the result when outer joins are involved, because the left and right sides are not interchangeable.
+
 
 **Question B – NULL semantics:**  
 `return_date` is `NULL` for an open loan. `NULL` in SQL does not mean zero or
@@ -803,7 +805,7 @@ false – it means *unknown*. Consider the query `WHERE return_date = NULL`.
 Will it return the open loans? Explain why or why not and write the correct
 form.
 
-> *Your answer:*
+> WHERE return_date = NULL returns nothing because NULL = NULL evaluates to UNKNOWN in SQL. The correct form is WHERE return_date IS NULL, which is specifically designed to test for missing values.
 
 **Question C – Surrogate vs. natural key:**  
 `book` uses `isbn` as its natural primary key; all other entities use surrogate
@@ -811,7 +813,7 @@ integer keys. Suppose the library occasionally receives books without an ISBN
 (unpublished manuscripts, internal reports). How would this affect the `isbn`
 primary key? What design change would you make?
 
-> *Your answer:*
+> Without an ISBN, the natural key would be NULL which violates the primary key constraint. The fix is to introduce a surrogate integer key book_id as the primary key and keep isbn as an optional UNIQUE alternate key.
 
 **Question D – Relational algebra limitations:**  
 Suppose the library wants to find all members who have borrowed the same copy
@@ -821,12 +823,14 @@ operators of the relational algebra (σ, π, ρ, ×, −) without aggregation?
 What does this tell you about the relationship between relational algebra and
 SQL?
 
-> *Your answer:*
+> The SQL query uses GROUP BY and COUNT(*) which have no equivalent in the five basic relational algebra operators. This shows SQL is strictly more expressive than basic relational algebra — it extends it with aggregation and recursion that the algebra cannot express.
+
 
 > **Screenshot 4:** Take a screenshot of your terminal showing the output of
 > the query from Task 4d (the join across four relations), and insert it here.
 >
-> `[insert screenshot]`
+> <img width="443" height="105" alt="image" src="https://github.com/user-attachments/assets/8ac367a9-90f0-46df-860f-f13f23aa5e43" />
+
 
 ---
 
